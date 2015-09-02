@@ -295,3 +295,58 @@ func main() {
 Go has 3 simple control stuctures that can be used in many ways.
 
 ### `for` loops
+
+Go only has 1 type of loop: the `for` loop.   As with most languages, `for` loops repeat a block of code multiple times.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  i := 1
+  for i <= 10 {
+    fmt.Println(i)
+    i += 1
+  }
+
+  second()
+  three()
+}
+
+func second()  {
+  // A more common an concise declaration
+  for i := 11; i <= 20; i++ {
+    fmt.Println(i)
+  }
+}
+
+func three()  {
+  for i := 19; i >= 0; i-- {
+    fmt.Println(i)
+  }
+}
+```
+
+### `if`
+
+If blocks work similarly to js, except there are some minor syntax differences:
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  for i := 0; i <= 10; i++ {
+    if i % 2 == 0 {
+      fmt.Println(i, "divisible by 2")
+    } else if i % 3 {
+      fmt.Println(i, "divisible by 3")
+    } else {
+      fmt.Println(i, "beepin beep")
+    }
+    fmt.Println("I run every loop")
+  }
+}
+```
