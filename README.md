@@ -7,7 +7,7 @@ Other than specific citations, most of the following is simmered down from the f
 
 - [An Introduction to Programming in Go](http://www.golang-book.com) by [Caleb Doxsey](http://www.doxsey.net)
 
-  <a href="http://www.golang-book.com"><img src="http://www.golang-book.com/assets/img/cover.png" width="100"></a>
+  <a href="http://www.golang-book.com"><img src="/img/introtogo.png" width="100"></a>
 - [How to Write Go Code][how-url]
 - [Effective Go][effective-url]
 - [Golang FAQ][faq-url]
