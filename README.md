@@ -12,6 +12,9 @@ Other than specific citations, most of the following is simmered down from the f
 - [Effective Go][effective-url]
 - [Golang FAQ][faq-url]
 
+[how-url]: https://golang.org/doc/code.html
+[effective-url]: https://golang.org/doc/effective_go.html
+[faq-url]: https://golang.org/doc/faq
 
 ## Install
 
@@ -186,13 +189,22 @@ import "fmt"
 func main() {
   var x string
   x = "Hi I'm a string"
-  fmt.Println(x) // "Hi I'm a string"
+  var y = "I'm another string"
+  z := "Beep another string"
+  i := "var not required!"
+  fmt.Println(x) // Hi I'm a string
+  fmt.Println(y) // I'm another string
+  fmt.Println(z) // Beep another string
+  fmt.Println(i) // var not required!
 }
 ```
 
 Variables are created using the `var` keyword, followed by the variable name (`x`) followed by the variable type.
 
-
-[how-url]: https://golang.org/doc/code.html
-[effective-url]: https://golang.org/doc/effective_go.html
-[faq-url]: https://golang.org/doc/faq
+```go
+// Simple typed variables
+var x string = "hello i'm variable of type string"
+var y int16 = 32
+var z = "var can infer type"
+i := 32
+```
