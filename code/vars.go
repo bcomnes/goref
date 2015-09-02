@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+var (
+  a = 5
+  b int64 = 6
+  c = "a string"
+)
+
 func main() {
   var x string
   x = "Hi I'm a string"
@@ -12,4 +18,7 @@ func main() {
   fmt.Println(y) // I'm another string
   fmt.Println(z) // Beep another string
   fmt.Println(i) // var not required!
+  fmt.Println(a)
+  fmt.Println(b)
+  fmt.Println(c)
 }
