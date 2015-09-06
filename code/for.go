@@ -3,14 +3,19 @@ package main
 import "fmt"
 
 func main() {
-  i := 1
+
+  first()
+  second()
+  three()
+}
+
+func first() {
+  // minimal for loop
+  i := 0
   for i <= 10 {
     fmt.Println(i)
     i += 1
   }
-
-  second()
-  three()
 }
 
 func second()  {
@@ -21,7 +26,6 @@ func second()  {
 }
 
 func three()  {
-  // A more common an concise declaration
   for i := 19; i >= 0; i-- {
     fmt.Println(i)
   }

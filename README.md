@@ -22,7 +22,14 @@ Install using a rolling package manager:
 
 ```sh
 $ brew install go #OSX
-$ choco install golang #Windows
+```
+
+```sh
+C:> choco install golang #Windows
+```
+
+```sh
+$ sudo pacman -S go #Arch Linux
 ```
 
 The prebuilt binaries are also a good option for linux.  Don't get stuck using an old version.
@@ -37,7 +44,7 @@ Go expects two primary `ENV` vars to be set:
 
 ### $GOROOT
 
-`GOROOT` needs to be set to where you installed go.  In most cases, this will automatically be set by the package manager, or if you installed the prebuilt bins to the default location.  Otherwise you need to set this in your dotfiles.  See [#tarball_non_standard](https://golang.org/doc/install#tarball_non_standard)
+`GOROOT` needs to be set to where you installed go.  In most cases, this will automatically be set by the package manager, or if you installed the prebuilt bins to the default location.  Otherwise you need to set this in your dotfiles.  See [golang.org/doc/install#tarball_non_standard](https://golang.org/doc/install#tarball_non_standard)
 
 ### $GOPATH
 
@@ -119,6 +126,13 @@ Download and build dependencies with `go get`:
 ```sh
 $ go get github.com/ipfs/go-ipfs/cmd/ipfs
 ```
+
+`go get` has a few flags:
+
+- `-h`: display extended help info
+- `-d`: download package only (no install)
+- `-t`: download package with tools necessary for testing
+- `-u`: update package and dependencies
 
 ## Common Types
 
@@ -304,14 +318,18 @@ package main
 import "fmt"
 
 func main() {
+  first()
+  second()
+  three()
+}
+
+func first() {
+  // minimal for loop
   i := 1
   for i <= 10 {
     fmt.Println(i)
     i += 1
   }
-
-  second()
-  three()
 }
 
 func second()  {
@@ -328,7 +346,7 @@ func three()  {
 }
 ```
 
-### `if`
+### `if` statements
 
 If blocks work similarly to js, except there are some minor syntax differences:
 
@@ -346,7 +364,44 @@ func main() {
     } else {
       fmt.Println(i, "beepin beep")
     }
-    fmt.Println("I run every loop")
   }
 }
 ```
+
+### `switch` blocks
+
+Switches look for a matching case top down and break once a match is found.  There is no fallthrough [[Citation Needed]]().
+
+Switches also support a default case if no match is found.
+
+Generally avoid switch statements.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  mySwitch(0)
+  mySwitch(1)
+  mySwitch(2)
+  strSwitch("boop")
+  strSwitch("foo")
+}
+
+func mySwitch(i int) {
+  switch i {
+  case 0: fmt.Println("0")
+  case 1: fmt.Println("2")
+  case 2: fmt.Println("2")
+  }
+}
+
+func strSwitch(i string) {
+  switch i {
+  case "boop": fmt.Println("beep")
+  case "foo": fmt.Println("bar")
+  }
+}
+```
+
