@@ -405,3 +405,32 @@ func strSwitch(i string) {
 }
 ```
 
+## Arrays
+
+Arrays are an ordered (numbered) sequence of elements of a single type with a fixed length. 
+
+## Slices
+
+## Maps
+
+## Functions
+
+## Defers
+
+## Panic and Recover
+
+## Pointers
+
+## Structs
+
+## Interfaces
+
+## Go routines
+
+### Channels
+
+## Testing
+
+## Error handing
+
+## Basic webservices
