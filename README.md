@@ -185,6 +185,17 @@ Same as JS:
 - `||` or
 - `!` not
 
+### Type Conversions
+
+Types can be converted different types by running the variable through the desired type as a function.
+
+For example, turning an `int` into a `float64`
+
+```go
+var x int = 32
+var xFload64 = float64(x)
+```
+
 ## Variables
 
 Generally try to create varibles by inferring their type using the `:=` operator:
@@ -346,6 +357,25 @@ func three()  {
 }
 ```
 
+If we have an iterable variable like an array or slice we can use the `range` keyword as a shorthand in our `for` loop.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  x := [5]float64{1,2,3,4,5}
+  var total float64 = 0
+
+  for _, value := range x {
+    total += value
+  }
+
+  fmt.Println(total / float64(len(x))) // 3
+}
+```
+
 ### `if` statements
 
 If blocks work similarly to js, except there are some minor syntax differences:
@@ -407,9 +437,71 @@ func strSwitch(i string) {
 
 ## Arrays
 
-Arrays are an ordered (numbered) sequence of elements of a single type with a fixed length. 
+Arrays are an ordered (numbered) sequence of elements of a single type with a fixed length.  Once created, they cannot be resized.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+  var x [5]int
+  x[4] = 100 // set 5th element (i = 4) to 100
+  fmt.Println(x) // [0 0 0 0 100]
+  var length = len(x)
+  fmt.Println(length)
+}
+```
+
+The length of an array is accessed using the built in `len(array)` function returning the length as an `int`.
+
+Arrays can also be created with the following shorthand:
+
+```go
+x := [5]int{ 1, 2, 3, 4, 5 }
+y := [5]float32 {
+  98,
+  93,
+  80,
+  52,
+  56, // Trailing comma REQUIRED
+  //45, // to allow commenting out elements
+}
+```
+
+Use `range` in a for loop to iterate over an array:
+
+```go
+x := float64[5]
+// ... assign some stuff
+for i, el := range x {
+  // i is index
+  // el is i'th element
+}
+```
 
 ## Slices
+
+Slices are 'slices' of arrays.  Slices can be shorter than their underlying array and change in length (increase and decrease) but cannot exceed the length of the underlying array.
+
+Slices are generally preferred to using arrays in the same way `:=` is preferred when type can be inferred.  They are created using the same syntax as an array, except by omitting the length:
+
+```go
+var x []float64
+// Creates a slice x of length 0
+fmt.Println(len(x)) // 0
+```
+
+You can also make slices using the `make` keyword:
+
+```go
+x := make([]float64, 5)
+// creates a slice with underlying array length of 5
+y := make([]float64, 5, 10)
+// A slice of length 5 with an underlying array of length 10
+```
+
+
 
 ## Maps
 
