@@ -11,6 +11,7 @@ Other than specific citations, most of the following is simmered down from the f
 - [How to Write Go Code][how-url]
 - [Effective Go][effective-url]
 - [Golang FAQ][faq-url]
+- [Rob Pike - From Parallel to Concurrent](https://channel9.msdn.com/Events/Lang-NEXT/Lang-NEXT-2014/From-Parallel-to-Concurrent)
 
 [how-url]: https://golang.org/doc/code.html
 [effective-url]: https://golang.org/doc/effective_go.html
