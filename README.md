@@ -528,3 +528,7 @@ y := make([]float64, 5, 10)
 ## Error handing
 
 ## Basic webservices
+
+## Vendoring
+
+- [<schmichael>](http://schmichael.com/) recomends https://github.com/robfig/glock for vendoring
