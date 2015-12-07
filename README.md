@@ -53,7 +53,15 @@ Go expects two primary `ENV` vars to be set:
 The `GOPATH` path needs to be set every time unfortunately.  This seems to be the convention:
 
 ```sh
-$ mkdir -p ~/go/{bin,src} ; export GOPATH=$HOME/go ; export PATH=$PATH:$GOPATH/bin
+$ mkdir -p ~/go/{bin,src} ; echo "export GOPATH=\$HOME/go" >> ~/.bashrc ; echo "export PATH=\$PATH:\$GOPATH/bin" >> ~/.bashrc 
+```
+
+This should add the following lines to your `.bashrc`
+
+```sh
+# add to ~/.bashrc to make the above action stik
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
 ```
 
 The `GOPATH` enables the `go get` command which downloads and build packages from git repositories.  They get built and installed to your `GOPATH`.  You pretty much always want to run the `bin`s they come along with so adding `$GOPATH/bin` to the `PATH` is critical.
