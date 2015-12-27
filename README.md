@@ -38,7 +38,7 @@ The prebuilt binaries are also a good option for linux.  Don't get stuck using a
 
 [golang.org/dl](https://golang.org/dl/)
 
-You also need to install `git` and (*le sigh*) `hg`.
+You also need to install `git` and `hg`.  Quite a few official packages are versioned with `hg`.
 
 ## Configure
 
