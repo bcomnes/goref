@@ -13,6 +13,8 @@ Other than specific citations, most of the following is simmered down from the f
 - [Golang FAQ][faq-url]
 - [Rob Pike - From Parallel to Concurrent](https://channel9.msdn.com/Events/Lang-NEXT/Lang-NEXT-2014/From-Parallel-to-Concurrent)
 - [Rob Pike - Concurrency Is Not Parallelism](https://www.youtube.com/watch?v=cN_DpYBzKso)
+- [Go by Example](https://gobyexample.com)
+- [talks.golang.org](https://talks.golang.org)
 
 [how-url]: https://golang.org/doc/code.html
 [effective-url]: https://golang.org/doc/effective_go.html
