@@ -216,6 +216,10 @@ Generally try to create varibles by inferring their type using the `:=` operator
 x := "This results in x being a string"
 ```
 
+You can think of this as stating:
+
+> Create a variable who's type and value is the following -- [Rob Pike: Advanced Topics in Programming Languages: Concurrency/message passing Newsqueak](https://youtu.be/hB05UFqOtFA?t=9m42s)
+
 Here is an example `go` program:
 
 ```go
@@ -311,7 +315,7 @@ This pattern works with other keywords that are used similarly to the `var` keyw
 
 ### Process input
 
-- `fmt.Scanf("%f", &var_name)`: Wait for `stdin` and write to `&var_name`.  
+- `fmt.Scanf("%f", &var_name)`: Wait for `stdin` and write to `&var_name`.
   - See pointers for info on the `&` prefix.
 
 ```go
@@ -494,9 +498,16 @@ for i, el := range x {
 
 ## Slices
 
-Slices are 'slices' of arrays.  Slices can be shorter than their underlying array and change in length (increase and decrease) but cannot exceed the length of the underlying array.
+Similar to type inference, you can create an array and infer its length upon creation.  This is generally preferred over specifying length manually the same way `:=` is preferred when possible.
 
-Slices are generally preferred to using arrays in the same way `:=` is preferred when type can be inferred.  They are created using the same syntax as an array, except by omitting the length:
+```go
+arr := []float64{1,2,3,4}
+// creates a slice with an underlying array of length 4
+```
+
+When you create an array this way, you are actually creating a slice.
+
+Slices are 'slices' of arrays.  Slices can be shorter than their underlying array and change in length (increase and decrease) but cannot exceed the length of the underlying array.
 
 ```go
 var x []float64
@@ -513,11 +524,234 @@ y := make([]float64, 5, 10)
 // A slice of length 5 with an underlying array of length 10
 ```
 
+TODO: grab depiction of slice smaller than underlying array.
 
+### Slicing
+
+Using the slice syntax, you can slice up existing arrays and create a slice of a range.
+
+```go
+// array[low:high]
+arr := []float64{1,2,3,4,5,6,7,8,9}
+s := arr[0:5] // [1 2 3 4 5]
+t := arr[1:6] // [2 3 4 5 6]
+```
+
+The `low` index is where the slice starts and the `high` index is where the slice stops.  The `high` index is **not** included.
+
+
+### Appending
+
+The `append` function accepts a slice and additional values to append.  It returns a new slice with with those values appended.
+
+```go
+slice := []float64{1,2,3,4,5} // [1 2 3 4 5]
+biggerSlice := append(slice, 6,7,8,9) // [1 2 3 4 5 6 7 8 9]
+```
+
+### Copying
+
+The `copy` function copies as much as one slice into another slice:
+
+```go
+func copyTest() {
+	slice1 := []int{1, 2, 3, 4}
+	slice2 := make([]int, 2)
+  var slice3 []int
+	copy(slice2, slice1)
+  copy(slice3, slice1)
+  slice2[0] = 2
+	fmt.Println(slice3, slice2, slice1) // [] [2 2] [1 2 3 4]
+
+	slice4 := slice1 // Assignments are copy by reference
+	slice4[0] = 10
+	fmt.Println(slice4, slice1) // [10 2 3 4] [10 2 3 4]
+}
+```
 
 ## Maps
 
+AKA: "Hash Table", "Dictionary" or "Associative Array".  An unordered collection of keys-value pairs.
+
+```go
+x := make(map[string]int)
+/*    ^    ^     ^    ^
+      |    |     |    |
+    init   |     |    |
+         keyword |    |
+                 |    |
+                 |    |
+             key type |
+                      |
+                 value type
+*/
+```
+
+Maps need to be initialized before they can be used using the `make` keyword.  The shorthand method is preferred in general.
+
+Functions like `len` work on maps.
+
+Keys can be deleted using the `delete(map, keyName)` function.
+
+Values are accessed similar to how we access arrays using the `map["key"]` syntax.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	x := make(map[string]string)
+	x["key"] = "10"
+	fmt.Println(x["key"]) // "10"
+	fmt.Println(len(x)) // 1
+	x["foo"] = "bar"
+}
+```
+
+Accessing keys that don't exist returns the zero value of the value type:
+
+```go
+y := make(map[string]string)
+z := make(map[int]int)
+fmt.Println(y["foo"] == "") // true
+fmt.Println(z[10] == 0) // true
+```
+
+Testing for key existence is easy due to a secondary Boolean existence return value:
+
+```go
+h := make(map[string]string)
+h["beep"] = "boop"
+
+noise, ok := h["beep"]
+fmt.Println(noise, ok) // boop true
+noNoise, ok  := h["foo"]
+fmt.Println(noNoise, ok) // '' false
+```
+
+When used in an `if` condition:
+
+```go
+h := make(map[string]string)
+h["beep"] = "boop"
+
+if noise, ok := h["beep"]; ok {
+  fmt.Println(noise) // boop
+}
+
+if noise, ok := h["bar"]; ok {
+  // Doesn't run
+  fmt.Println(noise)
+}
+```
+
+### Map shorthand
+
+The preferred way of making maps is with the shorthand syntax:
+
+```go
+myMap := map[string]string {
+  "hey": "hi",
+  "beep": "boop",
+  "foo": "bar",
+  "bleep": "blop", // trailing comma required
+}
+fmt.Println(myMap) // map[hey:hi beep:boop foo:bar bleep:blop]
+```
+
+### Maps of maps
+
+We can create maps of maps like this:
+
+```go
+mapOfMap := map[string]map[string]int {
+  "hey": {
+    "beep": 10,
+    "boop": 20,
+  },
+  "hi": {
+    "beep": 30,
+    "boop": 40
+  }
+}
+fmt.Println(mapOfMap) // map[hey:map[beep:10 boop:20] hi:map[boop:40 beep:30]]
+```
+
+*Note:* Maps of maps used to require a more verbose syntax:
+
+```go
+oldMapOfMap := map[string]map[string]int {
+  "hey": map[string]int{
+    "beep": 10,
+    "boop": 20,
+  }
+}
+fmt.Println(mapOfMap) // map[hey:map[beep:10 boop:20] hi:map[boop:40 beep:30]]
+```
+
+This is no longer so as of (TODO: get the go version where this changed).
+
 ## Functions
+
+A simple function example looks like:
+
+```go
+func average(xs []float64) float64 { panic("Not Implemented") }
+/*^    ^     ^      ^        ^     ^
+  |    |     |      |        |     |
+keyword|     |      |        |     |
+       |     |      |        |     |
+     name    |      |        |     |
+           arg1  arg-type    |     |
+                             |     |
+                       return-type |
+                                   |
+                            function-
+*/
+```
+
+The combination of the function's arguments(AKA parameters) and return type is known as the **function signature**.
+
+Calling a function in go pushes the function onto the execution callstack.  When the function returns, it is popped off the callstack and returns a value or set of values to the previous function on the callstack.
+
+TODO: grab callstack image.
+
+### Named Return Types
+
+Return types can be optionally named.  Named return types are intrinsically returned when the function ends:
+
+```go
+func f2() (r int) {
+  r = 1
+  return
+  // r is returned with whatever value is assigned to it.
+}
+```
+
+### Multiple return values
+
+Returning multiple return values is as easy as declaring them in the return section of the function declaration.
+
+```go
+func f3() (int, int) {
+  return 5, 6
+}
+
+func main() {
+  x, y := f3()
+  fmt.Println(x, y) // 5, 6
+}
+```
+
+Multiple return values are often used to indicate errors or success values:
+
+```go
+x, err := f()
+x, ok := g()
+```
+
+### Variadic Functions
 
 ## Defers
 
