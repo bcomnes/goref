@@ -55,7 +55,7 @@ Go expects two primary `ENV` vars to be set:
 The `GOPATH` path needs to be set every time unfortunately.  This seems to be the convention:
 
 ```sh
-$ mkdir -p ~/go/{bin,src} ; echo "export GOPATH=\$HOME/go" >> ~/.bashrc ; echo "export PATH=\$PATH:\$GOPATH/bin" >> ~/.bashrc 
+$ mkdir -p ~/go/{bin,src} ; echo "export GOPATH=\$HOME/go" >> ~/.bashrc ; echo "export PATH=\$PATH:\$GOPATH/bin" >> ~/.bashrc
 ```
 
 This should add the following lines to your `.bashrc`
@@ -112,6 +112,10 @@ func main() {
   fmt.Println("Hello world")
 }
 ```
+
+#### More info
+
+- [SO: What is a sensible way to layout a Go project](http://stackoverflow.com/questions/14867452/what-is-a-sensible-way-to-layout-a-go-project)
 
 ## Basic Go CLI
 
