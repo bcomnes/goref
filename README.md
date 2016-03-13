@@ -95,6 +95,8 @@ go get github.com/bcomnes/project-name
 - Each repository contains one or more packages.
 - Each package consists of one or more Go source files in a single directory.
 - The path to a package's directory determines its import path.
+---[How to Write Go Code](https://golang.org/doc/code.html#Overview)
+
 
 Every folder can house a single package.  Sub-packages can live in subfolders of a package.
 
@@ -193,7 +195,11 @@ import pf "github.com/bcomnes/package-folder"
 pf.Say() //Hi from foo
 ```
 
-Its generally a good idea to keep your package folder name the same as the package name, but know that you cannot depend on this to be true necessarily.  Many packages will leave their main package in the root of their project repo, because their primary product is a binary program installed with the `go get` command.
+Its generally a good idea to keep your package folder name the same as the package name, but know that you cannot depend on this to be true necessarily.
+
+> Go's convention is that the package name is the last element of the import path: the package imported as "crypto/rot13" should be named rot13. --[How to Write Go Code#PackageNames](https://golang.org/doc/code.html#PackageNames)
+
+Many packages will leave their main package in the root of their project repo, because their primary product is a binary program installed with the `go get` command.
 
 Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and possibly even be reluctant when creating multi-file packages.
 
