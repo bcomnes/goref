@@ -84,13 +84,40 @@ Develop your code in the `src` folder corresponding to where you host your code:
 ~/go/src/github.com/bcomnes/project-name
 ```
 
-Every file in your project is a `package`.  Each package needs a package declaration at the top of the file:
+You can quickly create new projects by creating the repo on github, then `go get [repo-qualified-name]` the newly created repo:
+
+```sh
+go get github.com/bcomnes/project-name
+```
+
+> - Go programmers typically keep all their Go code in a single workspace.
+- A workspace contains many version control repositories (managed by Git, for example).
+- Each repository contains one or more packages.
+- Each package consists of one or more Go source files in a single directory.
+- The path to a package's directory determines its import path.
+
+Every folder can house a single package.  Sub-packages can live in subfolders of a package.
+
+```sh
+/package/
+  foo.go
+  bar.go
+  /subpacakge/
+    beep.go
+    boop.go
+```
+
+Packages are a single file or collection of files that start with the `package` header.
 
 ```go
 package foo
 ```
 
-Executable commands must always run `package main`.
+Every package file must have the same package name as their siblings in the folder that they live in.  Having a different package declaration name than siblings results in an error.
+
+Every source file in your project must have a package header.
+
+Packages that generate executable commands must always be named `package main`.
 
 ```go
 package main
@@ -104,7 +131,7 @@ package main
 import "fmt"
 
 func notmain() {
-  fmt.Println("I don't run!")
+  fmt.Println("I don't run unless called!")
 }
 
 func main() {
@@ -112,6 +139,63 @@ func main() {
   fmt.Println("Hello world")
 }
 ```
+
+File names are mostly irrelevant.  Packages are referenced by their directory path in `$GOPATH`:
+
+```go
+import (
+  "fmt"
+  "github.com/bcomnes/package-folder"
+)
+```
+
+where `github.com/bcomnes/package-folder` has the following files:
+
+```sh
+/package-folder/
+  package-file1.go
+  package-file2.go
+```
+
+When you import a package by its dir path, the package name from the package declaration at the top of the package files becomes the prefix at which you can access everything that is exported from that package. e.g.
+
+If `package-file1.go` from  `github.com/bcomnes/package-folder` had the following contents:
+
+```go
+//package-file1.go
+package foo
+
+import "fmt"
+
+func Say( ){
+  fmt.Println("Hi from foo")
+}
+
+```
+
+then another go package importing this would import it like this:
+
+```go
+package bar
+
+import "github.com/bcomnes/package-folder"
+
+foo.Say() //Hi from foo
+```
+
+The package name `foo` is silently and invisibly dropped into the scope of the importing package as a package prefix.  You can name your imports by giving them a name upon importing
+
+```go
+package bar
+
+import pf "github.com/bcomnes/package-folder"
+
+pf.Say() //Hi from foo
+```
+
+Its generally a good idea to keep your package folder name the same as the package name, but know that you cannot depend on this to be true necessarily.  Many packages will leave their main package in the root of their project repo, because their primary product is a binary program installed with the `go get` command.
+
+Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and possibly even be reluctant when creating multi-file packages.
 
 #### More info
 
