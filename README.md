@@ -261,7 +261,7 @@ Go is a typed language.  You can specify to the compiler the datatype of the var
 - `complex64`
 - `complex128`
 
-### Stings
+### Strings
 
 Double quotes (`"string"`) requires escaped whitespace:
 
