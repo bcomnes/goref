@@ -1,4 +1,4 @@
-# goref
+programmers# goref
 A quick reference for the go language.
 
 This started as an incomplete blogpost that never saw the light of day, so rather than let that rot, this will be a semi-living document that will be updated as needed.
@@ -8,6 +8,9 @@ Other than specific citations, most of the following is simmered down from the f
 - [An Introduction to Programming in Go](http://www.golang-book.com) by [Caleb Doxsey](http://www.doxsey.net)
 
   <a href="http://www.golang-book.com"><img src="/img/introtogo.png" width="100"></a>
+- [The Go Programming Language](http://www.gopl.io) by [Donovan](https://github.com/adonovan) and [Kernighan](https://www.cs.princeton.edu/~bwk/).
+
+  <a href="http://www.gopl.io"><img src="/img/gopl.png" width="100"></a>
 - [How to Write Go Code][how-url]
 - [Effective Go][effective-url]
 - [Golang FAQ][faq-url]
@@ -849,9 +852,102 @@ x, ok := g()
 
 ### Variadic Functions
 
+You can indicate the last function argument can take a variable number of values for that argument.  Prefix the type of the last argument with a `...`.  You can access these arguments with `range`.
+
+```go
+func sum(args ...int) int {
+  total := 0
+  for _, v := range args {
+    total += v
+  }
+  return total
+}
+
+func main () {
+  fmt.Println(add(1,2,3)) // 6
+}
+```
+
+### Closures
+
+You can create function closures in go by creating a function assigned to a local variable of an enclosing function.  You can also return the inner function, which will retain access to local variables of the returned outer function.  This allows for stateful functions and private variables.
+
+```go
+func makeEvenGenerator() func() uint {
+  i := uint(0)
+
+  even := func () (ret uint) {
+    ret = i
+    i += 2
+    return
+  }
+
+  return even
+}
+
+func main() {
+  nextEven := makeEvenGenerator()
+  fmt.Println(nextEven()) // 0
+  fmt.Println(nextEven()) // 2
+  fmt.Println(nextEven()) // 4
+}
+
+```
+
+### Recursion
+
+Go supports recursion.  You can call functions inside themselves.  
+
+```go
+func factorial(x uint) uint {
+  if x == 0 {
+    return 1
+  }
+  return x * factorial(x - 1)
+}
+```
+
 ## Defers
 
+The `defer` statement can be used to schedule a function call to run when the current function scope is returned from.
+
+```go
+func first() {
+  fmt.Println("1st")
+}
+
+func second() {
+  fmt.Println("2nd")
+}
+
+func main() {
+  defer second()
+  first()
+}
+
+// Prints "1st" then "2nd"
+```
+
+Use this when opening resources that need to be closed, like files.
+
+```go
+f, _ := os.Open(filename)
+defer f.Close()
+```
+
 ## Panic and Recover
+
+Panic and Recover are like `throw` and `try/catch` in javascript.  When you panic in a function, it immediately returns from the function, just like throw.  We can catch the panic using defer:
+
+```go
+func main() {
+  defer func() {
+    str := recover()
+    fmt.Println(str) // PANIC
+  }()
+  panic("PANIC")
+}
+```
 
 ## Pointers
 
