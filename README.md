@@ -1,4 +1,4 @@
-programmers# goref
+synchronizecharacterselling-pointAnonymousprogrammers# goref
 A quick reference for the go language.
 
 This started as an incomplete blogpost that never saw the light of day, so rather than let that rot, this will be a semi-living document that will be updated as needed.
@@ -623,7 +623,11 @@ y := make([]float64, 5, 10)
 // A slice of length 5 with an underlying array of length 10
 ```
 
-TODO: grab depiction of slice smaller than underlying array.
+![slice](img/slice.png)
+
+(Image taken from Go In Action book.)
+
+Slices are pretty complicated, but easy to use.  The Go Programming Language and Go In Action books both have excellent in depth explanations of how they work internally, and some underlying subtleties in how they behave.
 
 ### Slicing
 
@@ -789,7 +793,7 @@ oldMapOfMap := map[string]map[string]int {
 fmt.Println(mapOfMap) // map[hey:map[beep:10 boop:20] hi:map[boop:40 beep:30]]
 ```
 
-This is no longer so as of (TODO: get the go version where this changed).
+This is no longer so as of Go 1.7 and a little earlier.  Just make sure you are running the latest go.
 
 ## Functions
 
@@ -814,7 +818,9 @@ The combination of the function's arguments(AKA parameters) and return type is k
 
 Calling a function in go pushes the function onto the execution callstack.  When the function returns, it is popped off the callstack and returns a value or set of values to the previous function on the callstack.
 
-TODO: grab callstack image.
+![callstack](img/callstack.png)
+
+(Image from [golang-book.com](http://www.golang-book.com/books/intro/7#section1))
 
 ### Named Return Types
 
@@ -951,13 +957,387 @@ func main() {
 
 ## Pointers
 
+Pointers let us pass references to variable instances around by referring to locations in memory.
+
+```go
+func zero(xPtr *int) {
+  *xPtr = 0
+}
+
+func main() {
+  x := 5
+  zero(&x)
+  fmt.Println(x) // 0
+}
+```
+
+You can require a pointer argument by putting the `*` in front of the argument type.
+
+To dereference a pointer means to access its value.  This is done by putting a `*` in from of the argument name in the function body.
+
+To create a pointer and pass it as a pointer argument in a function, prefix the variable with a `&` as you pass it into the funcion.
+
+
+```go
+func main() {
+  x := 5 // type of int
+  y := &x // returns a pointer to x of type *int
+  fmt.Println(*y) // will print 5.  *y returns the value stored at x
+}
+```
+
+```
+x int -> &x -> func(x *int) -> *x
+
+- &x get pointer to variable x
+- *x access/dereference variable at pointer x
+```
+
+### new
+
+The `new` function takes a type as an argument, creates a variable of that type and returns a pointer to that variable.
+
+
+```go
+func one(xPtr *int) {
+
+}
+
+func main() {
+  xPtr := new(int)
+  one(xPtr)
+  fmt.Println(*xPtr) // 1
+}
+```
+
 ## Structs
+
+Structs are types with named fields.  
+
+```go
+type Circle struct {
+  x float64
+  y float64
+  r float64
+}
+```
+
+```go
+type Circle struct {
+  x, y, r float64
+}
+```
+Initialize like any other type.  Fields default to their respective zero value of their type.
+
+```go
+var c Circle // or
+c := new(Circle) // returns a pointer *Circle
+```
+
+We can also give values on initialization:
+
+```go
+c := Circle{x: 0, y: 0, r: 5}
+// or
+c := Circle{0, 0, 5}
+```
+
+### Fields
+
+Field access is done with the `.` operator.
+
+```go
+fmt.Println(c.x, c.y, c.r)
+c.x = 10
+c.y = 5
+```
+
+### Methods
+
+You can add methods to Structs / Types.  These are functions that can be called off type instances, and can self reference the internal struct.  To add a method, declare a function with a receiver between the `func` keyword and the function name.  The method attaches itself to the type of the receiver.
+
+```go
+/*    Receiver
+         |
+         |
+    _____|______
+    |           |               */
+func (c *Circle) area() float64 {
+  return math.Pi * c.r * c.r
+}/*                 ^
+                    |
+                    |
+field access auto-dereferences the receiver  */
+```
+
+```go
+c.area() //calls the method on c
+```
+
+```go
+type Rectancle struct {
+  x1, y1, x2, y2 float64
+}
+
+func (r *Rectancle) area() float64 {
+  l := distance(r.x1, r.y1, r.x1, r.y2)
+  w := distance(r.x1, r.y1, r.x2, r.y1)
+  return l * w
+}
+
+func distance(x1, y1, x2, y2 float64) float64 {
+  a := x2 – x1
+  b := y2 – y1
+  return math.Sqrt(a*a + b*b)
+}
+```
+
+#### Pointer types vs types.
+
+Methods can be attached to types and pointer types.
+
+Methods attached to types will copy of each argument value.  This means it will not be able to change values or be expensive if arguments are large structures.
+
+Methods attached to pointer types can modify values and are cheaper to call since no copying is done.
+
+By convention all methods should be pointer receivers or receivers, but not both.
+
+Example: If `p` is a variable of type Point, but the method requires a `\*Point` receiver, the compiler will translate
+
+```go
+p.ScaleBy(2)
+```
+
+into
+
+```go
+&p.ScaleBy(2)
+```
+ or visa versa
+
+```go
+pptr.Distance(q)
+// turns into
+(*pptr).Distance(q)
+```
+
+### Embedded Types
+
+You can create struct fields in other structs:
+
+```go
+type Person struct {
+  Name string
+}
+
+func (p * Person) Talk() {
+  fmt.Println("Hi, my name is ", p.name)
+}
+
+type Android struct {
+  Person Person // <--- Android has a person
+  Model string
+}
+a := new(Android)
+a.Person.Talk()
+
+// or
+type Android struct {
+  Person // <--- Android is a person.  Embedded/Anonymous type
+  Model string
+}
+a := new(Android)
+a.Person.Talk()
+a.Talk() // Works because it IS a person in this case.
+```
 
 ## Interfaces
 
+Interfaces are like meta structs.  Interfaces define a method set that contains the list of methods that a type must implement to qualify for the interface type.
+
+
+```go
+type Shape interface {
+  area() float64
+}
+```
+
+We can use interface types as arguments to functions:
+
+```go
+func totalArea(shapes ...Shape) float64 {
+  var area float64
+  for _, s := range shapes {
+    area += s.area()
+
+  }
+  return area
+}
+```
+
 ## Go routines
 
+Go provides concurrency primitives, a primary selling point of the language.  Any function call can be made async/concurrent by prefixing the call with the `go` keyword.
+
+```go
+package main
+
+import "fmt"
+
+func f(n int) {
+  for i:= 0; i < 10; i++ {
+    fmt.Println(n, ":", i)
+  }
+}
+
+func main() {
+  go f(0) // runs concurrently with˅
+  var input string
+  fmt.Scanln(&input)
+}
+```
+
 ### Channels
+
+Channels are how messages are passed between concurrent go routines.
+
+```go
+// make a new Channel
+var c chan string = make(chan string)
+// Write to Channel
+c <- "ping"
+// write chan to variable
+x := c
+```
+
+You make a channel while starting go routines, and pass them in.
+
+```go
+package main
+
+import (
+  "fmt"
+  "time"
+)
+
+func pinger(c chan string) {
+  for i := 0 ; ; i++ {
+    c <- "ping" // write to channel
+  }
+}
+
+func ponger(c chan string) {
+  for i := 0 ; ; i++ {
+    c <- "pong" // write to channel
+  }
+}
+
+func printer(c chan string) {
+  for {
+    msg := <- c // block this go routine waiting for messages
+    fmt.Println(msg) // prints ping pong ping pong....
+    time.Sleep(time.Second * 1)
+  }
+}
+
+func main() {
+  var c chan string = make(chan string)
+
+  go pinger(c)
+  go ponger(c)
+  go printer(c)
+
+  var input string // blocks main from ending till a character is typed
+  fmt.Scanln(&input)
+}
+```
+
+Channels can only hold one message at a time (per routine) and you can use that synchronize two routines.
+
+#### Channel Direction
+
+```go
+func pinger (c chan<- string) // Send only
+func printer (c <-chan string) // Read only
+```
+
+#### Select
+
+`select` is like a `switch` for Channels.  It reads from the first channel available with a message and randomly selects any others that are ready, otherwise it blocks.
+
+```go
+package main
+
+import (
+  "fmt"
+  "time"
+)
+
+func sender1(c chan<- string) {
+  for {
+    c <- "from 1"
+    time.Sleep(time.Second * 2)
+  }
+}
+
+func sender2(c chan<- string) {
+  for {
+    c <- "from 2"
+    time.Sleep(time.Second * 3)
+  }
+}
+
+func selector(chan1 <-chan string, chan2 <-chan string) {
+  for {
+    select {
+    case msg1 := <- chan1:
+      fmt.Println(msg1)
+    case msg2 := <-chan2:
+      fmt.Println(msg2)
+    }
+  }
+}
+
+func main() {
+  c1 := make(chan string)
+  c2 := make(chan string)
+
+  go sender1(c1)
+  go sender2(c2)
+  go selector(c1, c2)
+
+  var input string
+  fmt.Scanln(&input)
+}
+
+```
+
+Timeouts can be created with `time.After`.  Defaults can also be declared
+
+```go
+select {
+case msg1 := <- c1:
+  fmt.Println("Message 1", msg1)
+case msg2 := <- c2:
+  fmt.Println("Message 2", msg2)
+case <- time.After(time.Second):
+  fmt.Println("timeout")
+default:
+  fmt.Println("not ready") // This spams in a for loop
+}
+```
+
+#### Buffered Channels
+
+You can write more than one message to a buffered channel:
+
+```go
+c := make(chan int, 1)
+/*                  ^
+                    |
+                    |
+      number of messages to buffer */
+```
 
 ## Testing
 
