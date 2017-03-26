@@ -11,6 +11,9 @@ Other than specific citations, most of the following is simmered down from the f
 - [The Go Programming Language](http://www.gopl.io) by [Donovan](https://github.com/adonovan) and [Kernighan](https://www.cs.princeton.edu/~bwk/).
 
   <a href="http://www.gopl.io"><img src="/img/gopl.png" width="100"></a>
+- [Go In Action](https://www.manning.com/books/go-in-action) by [Steve Francia](http://spf13.com).
+
+  <a href="https://www.manning.com/books/go-in-action"><img src="/img/goia.jpeg" width="100"></a>
 - [How to Write Go Code][how-url]
 - [Effective Go][effective-url]
 - [Golang FAQ][faq-url]
