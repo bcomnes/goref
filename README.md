@@ -1,4 +1,4 @@
-synchronizecharacterselling-pointAnonymousprogrammers# goref
+# goref
 A quick reference for the go language.
 
 This started as an incomplete blogpost that never saw the light of day, so rather than let that rot, this will be a semi-living document that will be updated as needed.
@@ -207,6 +207,80 @@ Its generally a good idea to keep your package folder name the same as the packa
 Many packages will leave their main package in the root of their project repo, because their primary product is a binary program installed with the `go get` command.
 
 Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and possibly even be reluctant when creating multi-file packages.
+
+
+### Testing
+
+Go includes first class testing tools. To write a test for a package, create a file with the same name but suffixed with `[file-name-to-test]_test.go`.
+
+```
+/package
+  foo.go
+  foo_test.go
+```
+
+A test is a function that takes a test assertion pointer `*testing.T`:
+
+```go
+// math_test.go
+package math
+
+import "testing"
+
+func TestAverage(t *testing.T) {
+  var v float64
+  v = Average([]float64{1,2})
+  if v != 1.5 {
+    t.Error("expected 1.5, got ", v)
+  }
+}
+```
+
+Notice that `Average` is not imported.  Since tests are apart of the package namespace itself, all top level functions and variables available to tests as well as every other file in the package.  On some level, this is nice since we can test un-exported functions without having to expose them publicly.  Its unfortunate because we have to be aware of invisible namespace overlap between files.
+
+To run tests, type:
+
+```
+$ go test
+```
+
+All tests found in the current package folder will be run.  Tests are identified by the public `Test` prefix on functions.  Typically you put the name of the function you are testing after `Test` like `TestAverage` for testing the `Average` function.
+
+A common testing pattern is to write a test that takes a struct of inputs and outputs, and loop through an array of these.
+
+
+```go
+package math_test
+
+import "testing"
+
+type testpair struct {
+  values []float64
+  average float64
+}
+
+var tests = []testpair{
+  { []float64{1,2}, 1.5 },
+  { []float64{1,1,1,1,1,1}, 1 },
+  { []float64{-1,1}, 0 },
+}
+
+func TestAverage(t *testing.T) {
+  for _, pair := range tests {
+    v := Average(pair.values)
+    if v != pair.average {
+      t.Error(
+        "For", pair.values, "expected", pair.average, "got", v
+      )
+    }
+  }
+}
+```
+
+### Vendoring
+
+- [<schmichael>](http://schmichael.com/) recomends https://github.com/robfig/glock for vendoring
+- There is a [vendoring experiment going on in 1.5](https://golang.org/doc/go1.5) with the following [design document](https://docs.google.com/document/d/1Bz5-UB7g2uPBdOx-rw5t9MxJwkfpx90cqG9AFL0JAYo/edit?usp=sharing):
 
 #### More info
 
@@ -1339,13 +1413,32 @@ c := make(chan int, 1)
       number of messages to buffer */
 ```
 
-## Testing
-
 ## Error handing
 
-## Basic webservices
+New errors can be created by the [`errors` package](https://golang.org/pkg/errors/)
 
-## Vendoring
+```go
+package main
 
-- [<schmichael>](http://schmichael.com/) recomends https://github.com/robfig/glock for vendoring
-- There is a [vendoring experiment going on in 1.5](https://golang.org/doc/go1.5) with the following [design document](https://docs.google.com/document/d/1Bz5-UB7g2uPBdOx-rw5t9MxJwkfpx90cqG9AFL0JAYo/edit?usp=sharing):
+import (
+	"errors"
+	"fmt"
+)
+
+func main() {
+	err := errors.New("emit macho dwarf: elf header corrupted")
+	if err != nil {
+		fmt.Print(err)
+	}
+}
+```
+
+TODO: The following sections
+
+## Readers
+
+## Writers
+
+## Encoding / Decoding
+
+## Network Services
