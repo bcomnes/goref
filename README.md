@@ -109,7 +109,7 @@ Every folder can house a single package.  Sub-packages can live in subfolders of
 /package/
   foo.go
   bar.go
-  /subpacakge/
+  /subpackage/
     beep.go
     boop.go
 ```
