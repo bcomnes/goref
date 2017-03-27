@@ -282,7 +282,10 @@ func TestAverage(t *testing.T) {
 
 ### Vendoring
 
-- [<schmichael>](http://schmichael.com/) recomends https://github.com/robfig/glock for vendoring
+Vendoring is up in the air still but generally here are the best leads:
+
+- Most official version aware vendoring tool https://github.com/golang/dep
+- [schmichael](http://schmichael.com/) recomends https://github.com/robfig/glock for vendoring
 - There is a [vendoring experiment going on in 1.5](https://golang.org/doc/go1.5) with the following [design document](https://docs.google.com/document/d/1Bz5-UB7g2uPBdOx-rw5t9MxJwkfpx90cqG9AFL0JAYo/edit?usp=sharing):
 
 #### More info
