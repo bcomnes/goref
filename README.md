@@ -752,6 +752,13 @@ func copyTest() {
 }
 ```
 
+*Fun Fact!*
+
+Go slices come from an idea in [B](https://en.wikipedia.org/wiki/B_(programming_language)), the precursor to [C](https://en.wikipedia.org/wiki/C_(programming_language)).
+
+> If you want to understand how slices work in #golang, look to B. 
+-- [@davecheney](https://twitter.com/davecheney/status/847023373490171904)
+
 ## Maps
 
 AKA: "Hash Table", "Dictionary" or "Associative Array".  An unordered collection of keys-value pairs.
