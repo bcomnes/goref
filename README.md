@@ -325,6 +325,10 @@ $ go get github.com/ipfs/go-ipfs/cmd/ipfs
 - `-t`: download package with tools necessary for testing
 - `-u`: update package and dependencies
 
+### Other doc tools
+
+- [gotools.org](https://gotools.org/) - Read any go package on one page.
+
 ## Common Types
 
 Go is a typed language.  You can specify to the compiler the datatype of the variable.  If you try to assign type a to a variable of type b, the compiler throws an error.
