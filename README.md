@@ -281,7 +281,31 @@ func TestAverage(t *testing.T) {
 }
 ```
 
-### Vendoring
+## Dep: the go package manager
+
+Use [dep](https://github.com/golang/dep) to manage dependencies in a go project.  See [docs](https://golang.github.io/dep/docs/introduction.html) for more info.
+
+### New project
+
+```
+$ dep init
+```
+
+### Newly cloned project
+
+```
+$ git clone
+$ cd repo
+$ dep ensure
+```
+
+### Add dependency
+
+```
+$ dep ensure -add github.com/pkg/errors
+```
+
+### Vendoring (Historical)
 
 Vendoring is up in the air still but generally here are the best leads:
 
