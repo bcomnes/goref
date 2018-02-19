@@ -211,6 +211,7 @@ Many packages will leave their main package in the root of their project repo, b
 
 Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and possibly even be reluctant when creating multi-file packages.
 
+- https://github.com/golang/example
 
 ### Testing
 
