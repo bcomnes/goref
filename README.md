@@ -714,6 +714,9 @@ y := make([]float64, 5, 10)
 
 Slices are pretty complicated, but easy to use.  The Go Programming Language and Go In Action books both have excellent in depth explanations of how they work internally, and some underlying subtleties in how they behave.
 
+- [A Tour Of Go: Slices](https://tour.golang.org/moretypes/7)
+- [The Go Blog - Go Slices: usage and internals](https://blog.golang.org/go-slices-usage-and-internals)
+
 ### Slicing
 
 Using the slice syntax, you can slice up existing arrays and create a slice of a range.
