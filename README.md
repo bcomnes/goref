@@ -287,6 +287,13 @@ TODO
 
 - [Testable examples](https://blog.golang.org/examples)
 
+## Documentation
+
+TODO
+
+- [Documenting go code](https://blog.golang.org/godoc-documenting-go-code)
+
+
 ## Dep: the go package manager
 
 Use [dep](https://github.com/golang/dep) to manage dependencies in a go project.  See [docs](https://golang.github.io/dep/docs/introduction.html) for more info.
