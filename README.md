@@ -281,6 +281,12 @@ func TestAverage(t *testing.T) {
 }
 ```
 
+### Testable examples
+
+TODO
+
+- [Testable examples](https://blog.golang.org/examples)
+
 ## Dep: the go package manager
 
 Use [dep](https://github.com/golang/dep) to manage dependencies in a go project.  See [docs](https://golang.github.io/dep/docs/introduction.html) for more info.
@@ -740,6 +746,7 @@ Slices are pretty complicated, but easy to use.  The Go Programming Language and
 
 - [A Tour Of Go: Slices](https://tour.golang.org/moretypes/7)
 - [The Go Blog - Go Slices: usage and internals](https://blog.golang.org/go-slices-usage-and-internals)
+- [Slice Tricks](https://github.com/golang/go/wiki/SliceTricks)
 
 ### Slicing
 
