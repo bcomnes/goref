@@ -11,7 +11,7 @@ Other than specific citations, most of the following is simmered down from the f
 - [The Go Programming Language](http://www.gopl.io) by [Donovan](https://github.com/adonovan) and [Kernighan](https://www.cs.princeton.edu/~bwk/).
 
   <a href="http://www.gopl.io"><img src="/img/gopl.png" width="100"></a>
-- [Go In Action](https://www.manning.com/books/go-in-action) by [William Kennedy](https://www.goinggo.net), [Steve Francia](http://spf13.com) and [Erik St. Martin](https://twitter.com/erikstmartin).
+- [Go In Action](https://www.manning.com/books/go-in-action) by [William Kennedy](https://www.goinggo.net), [Steve Francia](http://spf13.com) and [Erik St. Martin](httpsV://twitter.com/erikstmartin).
 
   <a href="https://www.manning.com/books/go-in-action"><img src="/img/goia.jpeg" width="100"></a>
 - [How to Write Go Code][how-url]
@@ -293,8 +293,23 @@ TODO
 
 - [Documenting go code](https://blog.golang.org/godoc-documenting-go-code)
 
+## `vgo`: Go Modules and Dependencies
 
-## Dep: the go package manager
+TODO
+
+`vgo` is the latest go dependency manager experiment.  See the following blogposts in leu of a cheatsheet.
+
+- [Go & Versioning](https://research.swtch.com/vgo)
+- [Go += Package Versioning (Go & Versioning, Part 1)](https://research.swtch.com/vgo-intro)
+- [A Tour of Versioned Go (vgo) (Go & Versioning, Part 2)](https://research.swtch.com/vgo-tour)
+- [Semantic Import Versioning (Go & Versioning, Part 3)](https://research.swtch.com/vgo-import)
+- [Minimal Version Selection (Go & Versioning, Part 4)](https://research.swtch.com/vgo-mvs)
+- [Reproducible, Verifiable, Verified Builds (Go & Versioning, Part 5)](https://research.swtch.com/vgo-repro)
+- [Defining Go Modules (Go & Versioning, Part 6)](https://research.swtch.com/vgo-module)
+- [Versioned Go Commands (Go & Versioning, Part 7)](https://research.swtch.com/vgo-cmd)
+- 📺 [Building Predictability into Your Pipeline :: Russ Cox; Jess Frazelle, Sam Boyer, Pete Garcin](https://www.youtube.com/watch?v=sbrZfPgNmfw)
+
+## Dep: the go package manager (Depreciated)
 
 Use [dep](https://github.com/golang/dep) to manage dependencies in a go project.  See [docs](https://golang.github.io/dep/docs/introduction.html) for more info.
 
