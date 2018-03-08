@@ -1,4 +1,4 @@
-# goref
+# goref 🐹
 A quick reference for the go language.
 
 This started as an incomplete blogpost that never saw the light of day, so rather than let that rot, this will be a semi-living document that will be updated as needed.
