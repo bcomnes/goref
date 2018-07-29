@@ -129,7 +129,7 @@ go get github.com/bcomnes/project-name
 ---[How to Write Go Code](https://golang.org/doc/code.html#Overview)
 
 
-#### Packages
+### Packages
 
 A package is a folder with a collection of go files.  Each file in the package folder is required to define the same package name header:
 
@@ -262,7 +262,7 @@ Many packages will leave their main package in the root of their project repo, b
 
 The name of the binary will be the the last element of the import path.  For example, if the import path is `foo/bar`, then the binary retrieved with `go get` will be placed in `$GOPATH/bin/bar`.
 
-### Testing
+### Package Testing
 
 Go includes first class testing tools. To write a test for a package, create a file with the same name but suffixed with `[file-name-to-test]_test.go`.
 
@@ -349,7 +349,7 @@ func TestAverage(t *testing.T) {
 }
 ```
 
-### Testable examples
+#### Testable examples
 
 Examples are also tests in go.
 
@@ -410,7 +410,7 @@ func Example() {
 - [Testable examples](https://blog.golang.org/examples)
 - [flattree/example_test.go](https://github.com/bcomnes/flattree/blob/master/example_test.go)
 
-## Documentation
+#### Godoc Documentation
 
 It is conventional to include a package level `doc.go` file which includes README like comments on the package:
 
@@ -437,46 +437,151 @@ package flattree
 - [Documenting go code](https://blog.golang.org/godoc-documenting-go-code)
 - [flattree/doc.go](https://github.com/bcomnes/flattree/blob/master/doc.go)
 
-## `vgo`: Go Modules and Dependencies
+### `vgo`: Go Modules and Dependencies
 
 **This section is a WIP**
 
-`vgo` is the latest go dependency manager experiment.  See the following blogposts in leu of a cheatsheet.
+`vgo` and `Go 1.11` introduce modules.  Modules are a way to version collection of packages.
 
-- [Go & Versioning](https://research.swtch.com/vgo)
-- [Go += Package Versioning (Go & Versioning, Part 1)](https://research.swtch.com/vgo-intro)
-- [A Tour of Versioned Go (vgo) (Go & Versioning, Part 2)](https://research.swtch.com/vgo-tour)
-- [Semantic Import Versioning (Go & Versioning, Part 3)](https://research.swtch.com/vgo-import)
-- [Minimal Version Selection (Go & Versioning, Part 4)](https://research.swtch.com/vgo-mvs)
-- [Reproducible, Verifiable, Verified Builds (Go & Versioning, Part 5)](https://research.swtch.com/vgo-repro)
-- [Defining Go Modules (Go & Versioning, Part 6)](https://research.swtch.com/vgo-module)
-- [Versioned Go Commands (Go & Versioning, Part 7)](https://research.swtch.com/vgo-cmd)
+- [research.swtch.com/vgo](https://research.swtch.com/vgo): Proposal index
+- [go modules have landed](https://groups.google.com/forum/#!msg/golang-dev/a5PqQuBljF4/61QK4JdtBgAJ)
+- [go modules faq](https://github.com/golang/go/issues/24301#issuecomment-371228664)
+- [Go blog modules proposal](https://blog.golang.org/versioning-proposal)
 - 📺 [Building Predictability into Your Pipeline :: Russ Cox; Jess Frazelle, Sam Boyer, Pete Garcin](https://www.youtube.com/watch?v=sbrZfPgNmfw)
+- [example modules](https://github.com/ballpit/vgo-test)
+
+#### Get the beta
+
+```console
+$ go get -u golang.org/dl/go1.11beta2
+$ go1.11beta2 download
+```
+
+#### Get vgo:
+
+```console
+$ go get -u golang.org/x/vgo
+```
+
+#### Usage
+
+```console
+$ go help mod # print help docs
+$ go mod -pacakges
+$ go get -u path # update dep to the latest
+$ go mod -fix # fix up go.mod file. runs automatically
+$ go mod -sync # sync go.mod with code
+$ go mod -vendor # clears then moves all deps into the vendor folder
+$ go mod -verify # verify all deps have not been modified since downloading
+```
+
+##### Low level
+
+```console
+# low level commands
+# use -v for more info
+$ go mod -init # initialize a new module creating a go.mod file
+$ go mod -init -module set/module/path # set module path in go.mod
+$ go mod -module change/module/path # change module path in go.mod
+$ go mod -require path@1.0.0 # add a requirement to go.mod
+$ go get path@version # use this instead of mod -require
+$ go mod -droprequire path # drop a requirement from go.mod
+$ go get path@none # use this instead of mod -droprequire
+$ go mod -exclude path@1.0.0 # add a exclude to go.mod
+$ go mod -dropexclude path@1.0.0 # remove a exclude to go.mod
+$ go mod -replace=old@v=new@w # temporary overrides. can use ../relative/paths if @v is omitted
+$ go mod -dropreplace=old@v
+$ go mod -fmt # reformat old go.mod file
+$ go mod -graph # prints the module requirement graph
+$ go mod -json # prints the module requirement graph
+$ go list -m -json all # full set of modules available to a build
+```
+
+#### Conventions
+
+Create a normal set of packages in a repo.  Run `go mod -init` to create the `go.mod` file as well as the `go.sum` file.
+
+The `go.sum` file is not a lock file:
+
+> The go command maintains, in the main module's root directory alongside go.mod, a file named go.sum containing the expected cryptographic checksums of the content of specific module versions. Each time a dependency is used, its checksum is added to go.sum if missing or else required to match the existing entry in go.sum. -- Paul Jolly (#modules@gophers.slack.com)
+
+As you edit your module, you create releases by tagging your code with semver tags (e.g. `v1.0.5`).  Version `v0.*.*` and `v1.*.*` are both considered `v1` modules and don't have semantic version import path prefixes.
+
+You may need to update your `~/.netrc` with a github personal access token.  The CLI will provide instructions on how to do this if needed.
+
+- [research.swtch.com/vgo-tour](https://research.swtch.com/vgo-tour): Verbose tutorial missing major version details
+
+##### Breaking changes
+
+When you need to make a breaking change, first update the `go.mod` file to reflect the new semantic version import path:
+
+```go
+module github.com/user/package
+// becomes
+module github.com/user/package/v2
+```
+
+Make your changes, sync the go.mod file, test.  When you are ready, tag your release `v2.0.0` and push your changes and tags.
+
+Branches and sub-folders are NOT required, however you can use them.
+
+###### go release
+
+TODO: Document `go release` when it is available.
+
+- [research.swtch.com/vgo-module](https://research.swtch.com/vgo-module): alternative breaking change organization explain here.
+- [Module compatibility and semantic versioning](https://tip.golang.org/cmd/go/#hdr-Module_compatibility_and_semantic_versioning): Additional info on module compatibility.
+- [`go release` issue](https://github.com/golang/go/issues/26420)
+- [research.swtch.com/vgo-cmd](https://research.swtch.com/vgo-cmd): command brainstorming
+
+##### Consuming breaking changes
+
+Go with modules supports partial module replacement.  Modules can consume multiple versions of the same dependency using semantic version imports.  Simply insert the major version number prefixed with a `v` before any submodule import path.
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/example/somemodule/somepackage"
+)
+```
+
+becomes
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/example/somemodule/v2/somepackage"
+)
+```
+
+Thats it!  Building will download and update your `go.mod` file.  You have to update the import path everywhere its imported throughout your modules and packages.
+
+Dependencies can have different major versions of modules than your package and it all works.
+
+Semantic import versioning uses minimal version selection.
+
+- [research.swtch.com/vgo-mvs](https://research.swtch.com/vgo-mvs): Minimal Version Selection
 
 
-
-https://groups.google.com/forum/#!msg/golang-dev/a5PqQuBljF4/61QK4JdtBgAJ
-https://github.com/golang/go/issues/26420
-https://github.com/golang/go/issues/24301#issuecomment-371228664
-https://research.swtch.com/vgo-tour
-https://blog.golang.org/versioning-proposal
-https://research.swtch.com/vgo-cmd
-https://research.swtch.com/vgo-module
-https://research.swtch.com/vgo-tour
-`~/.netrc`
-
-
-## Dep: the go package manager (Depreciated)
+#### Dep: the go package manager (Depreciated)
 
 Use [dep](https://github.com/golang/dep) to manage dependencies in a go project.  See [docs](https://golang.github.io/dep/docs/introduction.html) for more info.
 
-### New project
+Built by a community member [Sam Boyer](https://twitter.com/sdboyer), who has been somewhat bitter about all the work he did on `dep` only to have vgo take over.  Additionally, many projects were using [`glide`](https://github.com/Masterminds/glide), a project that preceded and worked very similarly to `dep`, and also took some wind out of `dep`s uptake.
+
+A presentation about this was given at GoSF but was lost and may be re-recorded. ([source](https://twitter.com/sdboyer/status/1021966391501615104))
+
+#### New project
 
 ```
 $ dep init
 ```
 
-### Newly cloned project
+#### Newly cloned project
 
 ```
 $ git clone
@@ -484,21 +589,21 @@ $ cd repo
 $ dep ensure
 ```
 
-### Add dependency
+#### Add dependency
 
 ```
 $ dep ensure -add github.com/pkg/errors
 ```
 
-### Vendoring (Historical)
+#### Vendoring (Historical)
 
 Vendoring is up in the air still but generally here are the best leads:
 
 - Most official version aware vendoring tool https://github.com/golang/dep
-- [schmichael](http://schmichael.com/) recomends https://github.com/robfig/glock for vendoring
+- [schmichael](http://schmichael.com/) recommends https://github.com/robfig/glock for vendoring
 - There is a [vendoring experiment going on in 1.5](https://golang.org/doc/go1.5) with the following [design document](https://docs.google.com/document/d/1Bz5-UB7g2uPBdOx-rw5t9MxJwkfpx90cqG9AFL0JAYo/edit?usp=sharing):
 
-#### More info
+##### More info
 
 - [SO: What is a sensible way to layout a Go project](http://stackoverflow.com/questions/14867452/what-is-a-sensible-way-to-layout-a-go-project)
 
@@ -506,13 +611,13 @@ Vendoring is up in the air still but generally here are the best leads:
 
 Run `go` files with `go run`:
 
-```sh
+```console
 $ go run /path/to/foo.go
 ```
 
 Get docs using `godoc`:
 
-```
+```console
 $ godoc fmt Println
 func Println(a ...interface{}) (n int, err error)
     Println formats using the default formats for its operands and writes to
@@ -603,7 +708,7 @@ var xFload64 = float64(x)
 
 ## Variables
 
-Generally try to create varibles by inferring their type using the `:=` operator:
+Generally try to create variables by inferring their type using the `:=` operator:
 
 ```go
 x := "This results in x being a string"
@@ -647,9 +752,9 @@ i := 32
 
 ### Naming variables
 
-Variable names must start with a letter and can contain letters, numbers and the underscore symbole (`_`).
+Variable names must start with a letter and can contain letters, numbers and the underscore symbol (`_`).
 
-Unused variables throw errors and warnings.  If a variable is named (`_`), the go compiler will not complain if it is unsed.  There should never be unused named variables.
+Unused variables throw errors and warnings.  If a variable is named (`_`), the go compiler will not complain if it is unused.  There should never be unused named variables.
 
 ### Simple operators
 
@@ -667,15 +772,15 @@ Simple operators work on most variables of the same type.
 
 ### Scope
 
-Go is "[lexically scoped using blocks]()"[citation needed].
+Go is "[lexically scoped using blocks](https://golang.org/ref/spec#Blocks)".
 
 Variables exist inside the braces(`{}`) where they are defined, as well as in any child braces(`{}`).
 
-A block is the code inside a pair of braces(`{}`).
+A block is the code inside a pair of braces(`{}`).  Package level variables exist for all files in a package.  Exported package variables can be imported by external package consumers.
 
 ### Constants
 
-Declair constants using the `const` keyword in the same maner as the `var` keyword.
+Declare constants using the `const` keyword in the same manner as the `var` keyword.
 
 ```go
 const x string = "go ahead, just try to reassign me"
@@ -706,6 +811,23 @@ This pattern works with other keywords that are used similarly to the `var` keyw
 - `fmt.Print('no newline')`: print without a trailing newline.
 
 
+`Printf` has many "verbs" that can be used to display different data types in strings:
+
+- `%d` - decimal integer
+- `%x`, `%o`, `%b` - integer in hex, octal, binary
+- `%f`, `%g`, `%e` - floating-point number: `3.141593` `3.141592563589793` `3.141593e+00`
+- `%t` - boolean: `true` `false`
+- `%c` - rune (Unicode code point)
+- `%s` - string
+- `%q` - quoted string "abc" or run 'c'
+- `%v` - any value in natural format
+- `%T` - type of any value
+- `%%` - literal percentage sign (no operand)
+
+> From GOPL book 1st ed.  Ch1 p.10
+
+See [golang.org/pkg/fmt/](https://golang.org/pkg/fmt/) for more.
+
 ### Process input
 
 - `fmt.Scanf("%f", &var_name)`: Wait for `stdin` and write to `&var_name`.
@@ -726,7 +848,7 @@ func main() {
 ```
 ## Control Structures
 
-Go has 3 simple control stuctures that can be used in many ways.
+Go has 3 simple control structures that can be used in many ways.
 
 ### `for` loops
 
@@ -1673,3 +1795,5 @@ TODO: The following sections
 ## Encoding / Decoding
 
 ## Network Services
+
+## reflect and handling multiple data types
