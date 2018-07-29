@@ -441,7 +441,7 @@ package flattree
 
 **This section is a WIP**
 
-`vgo` and `Go 1.11` introduce modules.  Modules are a way to version collection of packages.
+`vgo` and `Go 1.11` introduce modules.  Modules are a way to version a collection of packages.
 
 - [research.swtch.com/vgo](https://research.swtch.com/vgo): Proposal index
 - [go modules have landed](https://groups.google.com/forum/#!msg/golang-dev/a5PqQuBljF4/61QK4JdtBgAJ)
