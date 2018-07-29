@@ -32,15 +32,15 @@ Other than specific citations, most of the following is simmered down from the f
 
 Install using a rolling package manager:
 
-```sh
+```console
 $ brew install go #OSX
 ```
 
-```sh
+```console
 C:> choco install golang #Windows
 ```
 
-```sh
+```console
 $ sudo pacman -S go #Arch Linux
 ```
 
@@ -49,6 +49,17 @@ The prebuilt binaries are also a good option for linux.  Don't get stuck using a
 [golang.org/dl](https://golang.org/dl/)
 
 You also need to install `git` and `hg`.  Quite a few official packages are versioned with `hg`.
+
+### Beta versions
+
+Beta versions of go are installed with go:
+
+```console
+$ go get golang.org/dl/go1.11beta2
+$ go1.11beta2 download
+```
+
+([ref](https://twitter.com/golang/status/1020184061858332672))
 
 ## Configure
 
@@ -60,7 +71,7 @@ Go expects two primary `ENV` vars to be set:
 
 ### $GOPATH
 
-The `GOPATH` path needs to be set every time unfortunately.  This seems to be the convention:
+The `GOPATH` path used to be required to be set.  Now it defaults to `~/go`.  You are still typically expected to add `~/go/bin` to your `$PATH` however.  This seems to be the convention:
 
 ```sh
 $ mkdir -p ~/go/{bin,src} ; echo "export GOPATH=\$HOME/go" >> ~/.bashrc ; echo "export PATH=\$PATH:\$GOPATH/bin" >> ~/.bashrc
@@ -82,9 +93,21 @@ For this document assume:
 $GOPATH = ~/go
 ```
 
-## Basic Go Packaging
+## Go Packages and Modules
+
+Go has two concepts.  Go packages are folders that contain one more go files.  A modules (starting with `vgo` and `go 1.11`) is a versioned collection of packages.
+
+### Basic Go Packaging
 
 Read the entire "[How to Write Go][how-url]" document,  but here are the basics:
+
+#### Go with modules
+
+Develop your code any where you want.  Dependencies are cached in `$GOPATH/src/mod`.
+
+#### Go without modules
+
+(**This advise is no longer required or recommended**)
 
 Develop your code in the `src` folder corresponding to where you host your code:
 
@@ -106,7 +129,17 @@ go get github.com/bcomnes/project-name
 ---[How to Write Go Code](https://golang.org/doc/code.html#Overview)
 
 
-Every folder can house a single package.  Sub-packages can live in subfolders of a package.
+#### Packages
+
+A package is a folder with a collection of go files.  Each file in the package folder is required to define the same package name header:
+
+```go
+package foo
+```
+
+Having a different package declaration name than siblings results in an error. Every package file must have the same package name as their siblings in the folder that they live in.
+
+Folders inside of a package can house a subpackage.
 
 ```sh
 /package/
@@ -117,40 +150,9 @@ Every folder can house a single package.  Sub-packages can live in subfolders of
     boop.go
 ```
 
-Packages are a single file or collection of files that start with the `package` header.
+#### Package import paths
 
-```go
-package foo
-```
-
-Every package file must have the same package name as their siblings in the folder that they live in.  Having a different package declaration name than siblings results in an error.
-
-Every source file in your project must have a package header.
-
-Packages that generate executable commands must always be named `package main`.
-
-```go
-package main
-```
-
-`package main` must contain a `main()` function, which is called when you execute the program.
-
-```go
-package main
-
-import "fmt"
-
-func notmain() {
-  fmt.Println("I don't run unless called!")
-}
-
-func main() {
-  // Hi I'm the entry point
-  fmt.Println("Hello world")
-}
-```
-
-File names are mostly irrelevant.  Packages are referenced by their directory path in `$GOPATH`:
+Package file names are mostly irrelevant.  Packages are imported by their import path, which is the URL where the code is hosted:
 
 ```go
 import (
@@ -167,7 +169,7 @@ where `github.com/bcomnes/package-folder` has the following files:
   package-file2.go
 ```
 
-When you import a package by its dir path, the package name from the package declaration at the top of the package files becomes the prefix at which you can access everything that is exported from that package. e.g.
+When you import a package by its import path, the package name from the package declaration at the top of the package files becomes the prefix at which you can access everything that is exported from that package. e.g.
 
 If `package-file1.go` from  `github.com/bcomnes/package-folder` had the following contents:
 
@@ -207,11 +209,58 @@ Its generally a good idea to keep your package folder name the same as the packa
 
 > Go's convention is that the package name is the last element of the import path: the package imported as "crypto/rot13" should be named rot13. --[How to Write Go Code#PackageNames](https://golang.org/doc/code.html#PackageNames)
 
-Many packages will leave their main package in the root of their project repo, because their primary product is a binary program installed with the `go get` command.
+#### Package exports
 
-Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and possibly even be reluctant when creating multi-file packages.
+Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and be judicious when creating many files in a single package.
 
 - https://github.com/golang/example
+
+```go
+//package-file1.go
+package foo
+
+import "fmt"
+
+func Exported( ){
+  fmt.Println("Hi from foo")
+}
+
+func notexported( ){
+  fmt.Println("No hi from foo")
+}
+
+```
+
+There are some benefits tho this, however, when writing tests, package level tests have privileged access to unexported values and functions.
+
+##### Executable (main) packages
+
+Packages that generate executable commands must always have the `package main` header.
+
+```go
+package main
+```
+
+`package main` must contain a `main()` function in at least one package file, which is called when you execute the program.
+
+```go
+package main
+
+import "fmt"
+
+func notmain() {
+  fmt.Println("I don't run unless called!")
+}
+
+func main() {
+  // Hi I'm the entry point
+  fmt.Println("Hello world")
+}
+```
+
+Many packages will leave their main package in the root of their project repo, because their primary product is a binary program installed with the `go get` command.
+
+The name of the binary will be the the last element of the import path.  For example, if the import path is `foo/bar`, then the binary retrieved with `go get` will be placed in `$GOPATH/bin/bar`.
 
 ### Testing
 
@@ -240,21 +289,40 @@ func TestAverage(t *testing.T) {
 }
 ```
 
-Notice that `Average` is not imported.  Since tests are apart of the package namespace itself, all top level functions and variables available to tests as well as every other file in the package.  On some level, this is nice since we can test un-exported functions without having to expose them publicly.  Its unfortunate because we have to be aware of invisible namespace overlap between files.
+Notice that `Average` is not imported.  Since tests are apart of the package collection itself, all top level functions and variables available to tests as well as every other file in the package.  On some level, this is nice since we can test un-exported (uncapitalized) functions without having to expose them publicly.  Its unfortunate because we have to be aware of invisible namespace overlap between files.
 
 To run tests, type:
 
-```
+```console
 $ go test
 ```
 
 All tests found in the current package folder will be run.  Tests are identified by the public `Test` prefix on functions.  Typically you put the name of the function you are testing after `Test` like `TestAverage` for testing the `Average` function.
 
+#### External test packages
+
+External test packages also are named `foo_test.go`, but also include the `_test` suffix in the package name:
+
+```go
+package math_test
+```
+
+These can only access exported values from the package, and are also useful for resolving import cycles.
+
+> If you want to declare that a file only tests the exported API of a package, or want to restrict yourself to that, that's the job of `foo_test`. -- Patrick Stephen (#general@gophers.slack.com)
+
+Some people recommend that you name internal tests `foo_internal_test.go` (`package foo`), and external test packages `foo_test.go`(`package foo_test`).
+
+> Test files that declare a package with the suffix "_test" will be compiled as a separate package, and then linked and run with the main test binary. [Test packages](https://golang.org/cmd/go/#hdr-Test_packages)
+
+#### Table driven tests
+
+
 A common testing pattern is to write a test that takes a struct of inputs and outputs, and loop through an array of these.
 
 
 ```go
-package math_test
+package math_test // external package
 
 import "testing"
 
@@ -283,19 +351,95 @@ func TestAverage(t *testing.T) {
 
 ### Testable examples
 
-TODO
+Examples are also tests in go.
+
+They reside in external test packages (`package foo_test`), and follow a similar name convention as a regular test.  The `Output` comment determines if the test passes or fails.
+
+```go
+package stringutil_test
+
+import (
+    "fmt"
+
+    "github.com/golang/example/stringutil"
+)
+
+func ExampleReverse() {
+    fmt.Println(stringutil.Reverse("hello"))
+    // Output: olleh
+}
+```
+
+Package level examples can be achieved by leaving off the suffix of the `Example` function:
+
+```go
+// example_test.go
+package flattree_test
+
+import (
+  "fmt"
+
+  "github.com/bcomnes/flattree"
+)
+
+func Example() {
+  var list = make([]uint64, 16, 50)
+
+  i := flattree.Index(1, 0) // get array index for depth: 0, offset: 0
+  j := flattree.Index(3, 0) // get array index for depth: 1, offset: 0
+
+  // use these indexes to store some data
+
+  list[i] = i
+  list[j] = j
+  parent := flattree.Parent(j, 0)
+  list[parent] = parent
+
+  fmt.Println(i)
+  fmt.Println(j)
+  fmt.Println(parent)
+  fmt.Println(list)
+  // Output:
+  // 1
+  // 7
+  // 15
+  // [0 1 0 0 0 0 0 7 0 0 0 0 0 0 0 15]
+}
+```
 
 - [Testable examples](https://blog.golang.org/examples)
+- [flattree/example_test.go](https://github.com/bcomnes/flattree/blob/master/example_test.go)
 
 ## Documentation
 
-TODO
+It is conventional to include a package level `doc.go` file which includes README like comments on the package:
+
+```go
+// Copyright 2018 Bret Comnes. All rights reserved.
+// Use of this source code is governed by a MIT license
+// that can be found in the LICENSE file.
+
+/*
+Package flattree implements a series of functions to map a binary tree to a list.
+You can represent a binary tree in a simple flat list using the following structure
+     3
+   1   5
+  0 2 4 6 ...
+This module exposes a series of functions to help you build and maintain this data structure.
+See also
+flat-tree for node: https://github.com/mafintosh/flat-tree.
+print-flat-tree: https://github.com/mafintosh/print-flat-tree.
+flat-tree for rust: https://github.com/mafintosh/flat-tree-rs.
+*/
+package flattree
+```
 
 - [Documenting go code](https://blog.golang.org/godoc-documenting-go-code)
+- [flattree/doc.go](https://github.com/bcomnes/flattree/blob/master/doc.go)
 
 ## `vgo`: Go Modules and Dependencies
 
-TODO
+**This section is a WIP**
 
 `vgo` is the latest go dependency manager experiment.  See the following blogposts in leu of a cheatsheet.
 
@@ -308,6 +452,17 @@ TODO
 - [Defining Go Modules (Go & Versioning, Part 6)](https://research.swtch.com/vgo-module)
 - [Versioned Go Commands (Go & Versioning, Part 7)](https://research.swtch.com/vgo-cmd)
 - 📺 [Building Predictability into Your Pipeline :: Russ Cox; Jess Frazelle, Sam Boyer, Pete Garcin](https://www.youtube.com/watch?v=sbrZfPgNmfw)
+
+
+
+https://groups.google.com/forum/#!msg/golang-dev/a5PqQuBljF4/61QK4JdtBgAJ
+https://github.com/golang/go/issues/26420
+https://github.com/golang/go/issues/24301#issuecomment-371228664
+https://research.swtch.com/vgo-tour
+https://blog.golang.org/versioning-proposal
+https://research.swtch.com/vgo-cmd
+https://research.swtch.com/vgo-module
+https://research.swtch.com/vgo-tour
 
 ## Dep: the go package manager (Depreciated)
 
@@ -817,7 +972,7 @@ func copyTest() {
 
 Go slices come from an idea in [B](https://en.wikipedia.org/wiki/B_(programming_language)), the precursor to [C](https://en.wikipedia.org/wiki/C_(programming_language)).
 
-> If you want to understand how slices work in #golang, look to B. 
+> If you want to understand how slices work in #golang, look to B.
 -- [@davecheney](https://twitter.com/davecheney/status/847023373490171904)
 
 ## Maps
@@ -1050,7 +1205,7 @@ func main() {
 
 ### Recursion
 
-Go supports recursion.  You can call functions inside themselves.  
+Go supports recursion.  You can call functions inside themselves.
 
 ```go
 func factorial(x uint) uint {
@@ -1160,7 +1315,7 @@ func main() {
 
 ## Structs
 
-Structs are types with named fields.  
+Structs are types with named fields.
 
 ```go
 type Circle struct {
