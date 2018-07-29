@@ -463,6 +463,8 @@ https://blog.golang.org/versioning-proposal
 https://research.swtch.com/vgo-cmd
 https://research.swtch.com/vgo-module
 https://research.swtch.com/vgo-tour
+`~/.netrc`
+
 
 ## Dep: the go package manager (Depreciated)
 
