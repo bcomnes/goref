@@ -575,7 +575,7 @@ Semantic import versioning uses minimal version selection.
 
 Use [dep](https://github.com/golang/dep) to manage dependencies in a go project.  See [docs](https://golang.github.io/dep/docs/introduction.html) for more info.
 
-Built by a community member [Sam Boyer](https://twitter.com/sdboyer), who has been somewhat bitter about all the work he did on `dep` only to have vgo take over.  Additionally, many projects were using [`glide`](https://github.com/Masterminds/glide), a project that preceded and worked very similarly to `dep`, and also took some wind out of `dep`s uptake.
+Built by a community member [Sam Boyer](https://twitter.com/sdboyer) as the proto-vgo dependency manager for go. Many projects were using [`glide`](https://github.com/Masterminds/glide), a project that preceded and worked very similarly to `dep`, and also took some wind out of `dep`s uptake.
 
 A presentation about this was given at GoSF but was lost and may be re-recorded. ([source](https://twitter.com/sdboyer/status/1021966391501615104))
 
