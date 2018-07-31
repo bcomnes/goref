@@ -213,6 +213,8 @@ Its generally a good idea to keep your package folder name the same as the packa
 
 Package names should be sort, contain no spaces, underscores, capitals.  Basically take every word of the name, lowercase it, and make it into one long single word.  Its the go way!
 
+- [blog.golang.org/package-names](https://blog.golang.org/package-names)
+
 #### Package exports
 
 Packages export things to importers by capitalizing the first letter of the variable or function they are exporting.  Package files have intrinsic access to the variables and types declared anywhere else in the package siblings.  This is unfortunate, so please take this in mind and make declarations obvious, and be judicious when creating many files in a single package.
