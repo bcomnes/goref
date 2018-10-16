@@ -454,6 +454,7 @@ package flattree
 - [go modules faq](https://github.com/golang/go/issues/24301#issuecomment-371228664)
 - [Go blog modules proposal](https://blog.golang.org/versioning-proposal)
 - 📺 [Building Predictability into Your Pipeline :: Russ Cox; Jess Frazelle, Sam Boyer, Pete Garcin](https://www.youtube.com/watch?v=sbrZfPgNmfw)
+- 📺 [Go 1.11 Beta Modules (vgo)](https://www.youtube.com/watch?v=c2lS-jhrtEI) (narrated by @bcomnes)
 - [example modules](https://github.com/ballpit/vgo-test)
 
 #### Get the beta
