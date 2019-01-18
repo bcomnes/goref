@@ -95,7 +95,7 @@ $GOPATH = ~/go
 
 ## Go Packages and Modules
 
-Go has two concepts.  Go packages are folders that contain one or more go files.  A modules (starting with `vgo` and `go 1.11`) is a versioned collection of packages.
+Go has two concepts.  Go packages are folders that contain one or more go files.  A module (starting with `vgo` and `go 1.11`) is a versioned collection of packages.
 
 ### Basic Go Packaging
 
