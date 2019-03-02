@@ -1,19 +1,11 @@
 # goref 🐹
 A quick reference for the go language.
 
-This started as an incomplete blogpost that never saw the light of day, so rather than let that rot, this will be a semi-living document that will be updated as needed.
-
 Other than specific citations, most of the following is simmered down from the following sources:
 
-- [An Introduction to Programming in Go](http://www.golang-book.com) by [Caleb Doxsey](http://www.doxsey.net)
-
-  <a href="http://www.golang-book.com"><img src="/img/introtogo.png" width="100"></a>
-- [The Go Programming Language](http://www.gopl.io) by [Donovan](https://github.com/adonovan) and [Kernighan](https://www.cs.princeton.edu/~bwk/).
-
-  <a href="http://www.gopl.io"><img src="/img/gopl.png" width="100"></a>
-- [Go In Action](https://www.manning.com/books/go-in-action) by [William Kennedy](https://www.goinggo.net), [Steve Francia](http://spf13.com) and [Erik St. Martin](https://twitter.com/erikstmartin).
-
-  <a href="https://www.manning.com/books/go-in-action"><img src="/img/goia.jpeg" width="100"></a>
+- [An Introduction to Programming in Go](http://www.golang-book.com) by [Caleb Doxsey](http://www.doxsey.net) <a href="http://www.golang-book.com"><img src="/img/introtogo.png" width="100"></a>
+- [The Go Programming Language](http://www.gopl.io) by [Donovan](https://github.com/adonovan) and [Kernighan](https://www.cs.princeton.edu/~bwk/).  <a href="http://www.gopl.io"><img src="/img/gopl.png" width="100"></a>
+- [Go In Action](https://www.manning.com/books/go-in-action) by [William Kennedy](https://www.goinggo.net), [Steve Francia](http://spf13.com) and [Erik St. Martin](https://twitter.com/erikstmartin).  <a href="https://www.manning.com/books/go-in-action"><img src="/img/goia.jpeg" width="100"></a>
 - [How to Write Go Code][how-url]
 - [Effective Go][effective-url]
 - [Golang FAQ][faq-url]
@@ -23,10 +15,9 @@ Other than specific citations, most of the following is simmered down from the f
 - [talks.golang.org](https://talks.golang.org)
 - [The Go Programming Language](https://www.youtube.com/watch?v=rKnDgT73v8s) (The original presentation)
 - [dotGo 2015 - Rob Pike - Simplicity is Complicated](https://www.youtube.com/watch?v=rFejpH_tAHM)
-
-[how-url]: https://golang.org/doc/code.html
-[effective-url]: https://golang.org/doc/effective_go.html
-[faq-url]: https://golang.org/doc/faq
+- [how-url]: https://golang.org/doc/code.html
+- [effective-url]: https://golang.org/doc/effective_go.html
+- [faq-url]: https://golang.org/doc/faq
 
 ## Install
 
