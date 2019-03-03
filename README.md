@@ -15,9 +15,10 @@ Other than specific citations, most of the following is simmered down from the f
 - [talks.golang.org](https://talks.golang.org)
 - [The Go Programming Language](https://www.youtube.com/watch?v=rKnDgT73v8s) (The original presentation)
 - [dotGo 2015 - Rob Pike - Simplicity is Complicated](https://www.youtube.com/watch?v=rFejpH_tAHM)
-- [how-url]: https://golang.org/doc/code.html
-- [effective-url]: https://golang.org/doc/effective_go.html
-- [faq-url]: https://golang.org/doc/faq
+
+[how-url]: https://golang.org/doc/code.html
+[effective-url]: https://golang.org/doc/effective_go.html
+[faq-url]: https://golang.org/doc/faq
 
 ## Install
 
