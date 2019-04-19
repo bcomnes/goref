@@ -15,6 +15,7 @@ Other than specific citations, most of the following is simmered down from the f
 - [talks.golang.org](https://talks.golang.org)
 - [The Go Programming Language](https://www.youtube.com/watch?v=rKnDgT73v8s) (The original presentation)
 - [dotGo 2015 - Rob Pike - Simplicity is Complicated](https://www.youtube.com/watch?v=rFejpH_tAHM)
+- [Practical Go: Real world advice for writing maintainable Go programs](https://dave.cheney.net/practical-go/presentations/qcon-china.html)
 
 [how-url]: https://golang.org/doc/code.html
 [effective-url]: https://golang.org/doc/effective_go.html
